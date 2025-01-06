@@ -37,9 +37,9 @@ Please provide answers to these questions using markdown notation and place them
 3. Please provide a link to the repository you are using for this class.
 [Repository Link] (https://github.com/AlexTran0616/cs283)
 
-4. Briefly describe what you want to get out of this class.
+4. Briefly describe what you want to get out of this class.\
 I just want to further my understanding of C and develop my understanding of computers.
 
-5. Briefly describe any concerns you might be having with being successful in this class (if any).
+5. Briefly describe any concerns you might be having with being successful in this class (if any).\
 I'm just worried that I may do things "wrong"; however, I'll come and ask questions if I need anything.
 
