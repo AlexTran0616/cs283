@@ -1,0 +1,4 @@
+1..1
+not ok 1 Add a student 1 to db
+# (in test file test_single.sh, line 12)
+#   `[ "$status" -eq 0 ]' failed

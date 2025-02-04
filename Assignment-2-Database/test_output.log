@@ -1,0 +1,47 @@
+1..15
+ok 1 Check if database is empty to start
+not ok 2 Add a student 1 to db
+# (in test file test.sh, line 19)
+#   `[ "$status" -eq 0 ]' failed
+not ok 3 Add more students to db
+# (in test file test.sh, line 25)
+#   `[ "$status" -eq 0 ]' failed
+not ok 4 Check student count
+# (in test file test.sh, line 57)
+#   `echo "Failed Output:  $output"' failed
+# Failed Output:  Database contains no student records.
+not ok 5 Make sure adding duplicate student fails
+# (in test file test.sh, line 69)
+#   `echo "Failed Output:  $output"' failed
+# Failed Output:  DEBUG: Calculated offset for student ID 63: 3968
+# DEBUG: Error seeking to or reading at offset 3968
+not ok 6 Make sure the file size is correct at this time
+# (in test file test.sh, line 79)
+#   `echo "Expected: 64000000"' failed
+# Failed Output:  0
+# Expected: 64000000
+not ok 7 Find student 3 in db
+# (in test file test.sh, line 88)
+#   `[ "$status" -eq 0 ]' failed
+ok 8 Try looking up non-existent student
+not ok 9 Delete student 64 in db
+# (in test file test.sh, line 118)
+#   `[ "$status" -eq 0 ]' failed
+not ok 10 Try deleting non-existent student
+# (in test file test.sh, line 132)
+#   `echo "Failed Output:  $output"' failed
+# Failed Output:  Student ID 65 not found for deletion.
+not ok 11 Check student count again, should be 4 now
+# (in test file test.sh, line 141)
+#   `echo "Failed Output:  $output"' failed
+# Failed Output:  Database contains no student records.
+not ok 12 Print student records
+# (in test file test.sh, line 162)
+#   `echo "Expected Output: $expected_output"' failed
+# Failed Output: Database contains no student records.
+# Expected Output: ID FIRST_NAME LAST_NAME GPA 1 john doe 3.45 3 jane doe 3.90 63 jim doe 2.85 99999 big dude 2.05
+ok 13 Compress db - try 1 # skip
+not ok 14 Delete student 99999 in db
+# (in test file test.sh, line 181)
+#   `[ "$status" -eq 0 ]' failed
+ok 15 Compress db again - try 2
