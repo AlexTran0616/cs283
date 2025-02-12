@@ -113,7 +113,7 @@ int main()
         cmd_buff[strcspn(cmd_buff, "\n")] = '\0';
 
         if (cmd_buff[0] == '\0') {
-            printf("warning: no commands provided\n");
+            printf(CMD_WARN_NO_CMD);
             continue;
         }
 
