@@ -175,7 +175,8 @@ int exec_local_cmd_loop()
 
 	} else {
             perror("fork");
-        }
+            return ERR_EXEC_CMD;
+	}
     }
 
     free(cmd_buff);
