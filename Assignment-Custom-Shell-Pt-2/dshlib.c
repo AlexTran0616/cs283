@@ -169,7 +169,7 @@ int exec_local_cmd_loop()
         if (pid == 0) {
             execvp(cmd.argv[0], cmd.argv);
             fprintf(stderr,  "Command not found in PATH\n");
-            exit(ERR_EXEC_CMD);
+            WEXITSTATUS(ERR_EXEC_CMD);
 	} else if (pid > 0) {
            wait(NULL);
 
