@@ -1,0 +1,4 @@
+line1
+search_term_line
+line2
+search_term

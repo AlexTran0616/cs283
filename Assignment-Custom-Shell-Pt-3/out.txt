@@ -1,1 +1,2 @@
-hello @#$%^&*()_+
+hello, class
+this is line 2
