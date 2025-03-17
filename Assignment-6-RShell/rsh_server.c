@@ -268,17 +268,14 @@ int exec_client_requests(int cli_socket) {
     int rc;
     char *io_buff;
 
-    // Allocate memory for input buffer
     io_buff = malloc(RDSH_COMM_BUFF_SZ);
     if (io_buff == NULL) {
         return ERR_RDSH_SERVER;
     }
 
     while (1) {
-        // Prepare for a new command
         memset(io_buff, 0, RDSH_COMM_BUFF_SZ);
 
-        // Receive command from client
         io_size = recv(cli_socket, io_buff, RDSH_COMM_BUFF_SZ - 1, 0);
         if (io_size <= 0) {
             close(cli_socket);
@@ -288,22 +285,19 @@ int exec_client_requests(int cli_socket) {
 
         io_buff[io_size] = '\0';
 
-        // Trim leading whitespace
         char *start = io_buff;
         while (isspace((unsigned char)*start)) start++;
-        if (*start == '\0') {  // Empty command
+        if (*start == '\0') {  
             send_message_string(cli_socket, CMD_WARN_NO_CMD);
             continue;
         }
 
-        // Parse the command pipeline
         rc = build_cmd_list(start, &cmd_list);
         if (rc != OK) {
             send_message_string(cli_socket, CMD_ERR_RDSH_EXEC);
             continue;
         }
 
-        // Handle built-in commands
         if (strcmp(cmd_list.commands[0].argv[0], "stop-server") == 0) {
             send(cli_socket, "Stopping server...\n", strlen("Stopping server...\n"), 0);
             close(cli_socket);
@@ -323,13 +317,12 @@ int exec_client_requests(int cli_socket) {
             continue;
         }
 
-        // Execute pipeline
         rc = rsh_execute_pipeline(cli_socket, &cmd_list);
         if (rc != OK) {
             send_message_string(cli_socket, CMD_ERR_RDSH_EXEC);
         }
 
-        send_message_eof(cli_socket);  // Notify client of completion
+        send_message_eof(cli_socket);  
     }
 
     free(io_buff);
@@ -432,11 +425,10 @@ int send_message_string(int cli_socket, char *buff){
  */
 
 int rsh_execute_pipeline(int cli_sock, command_list_t *clist) {
-    int pipes[clist->num - 1][2];  // Array of pipes
+    int pipes[clist->num - 1][2];  
     pid_t pids[clist->num];
     int exit_code;
 
-    // Create pipes
     for (int i = 0; i < clist->num - 1; i++) {
         if (pipe(pipes[i]) == -1) {
             perror("pipe");
@@ -447,7 +439,6 @@ int rsh_execute_pipeline(int cli_sock, command_list_t *clist) {
     for (int i = 0; i < clist->num; i++) {
         pids[i] = fork();
         if (pids[i] == 0) {
-            // Setup pipes for the current process
             if (i == 0) {
                 dup2(cli_sock, STDIN_FILENO);
             } else {
@@ -460,30 +451,25 @@ int rsh_execute_pipeline(int cli_sock, command_list_t *clist) {
                 dup2(pipes[i][1], STDOUT_FILENO);
             }
 
-            // Close all pipes in child
             for (int j = 0; j < clist->num - 1; j++) {
                 close(pipes[j][0]);
                 close(pipes[j][1]);
             }
 
-            // Execute command
             execvp(clist->commands[i].argv[0], clist->commands[i].argv);
             perror("execvp");
             exit(ERR_EXEC_CMD);
         } else if (pids[i] < 0) {
-            // Fork failed
             perror("fork");
             return ERR_EXEC_CMD;
         }
     }
 
-    // Close all pipes in the parent process
     for (int i = 0; i < clist->num - 1; i++) {
         close(pipes[i][0]);
         close(pipes[i][1]);
     }
 
-    // Wait for all child processes
     for (int i = 0; i < clist->num; i++) {
         int status;
         waitpid(pids[i], &status, 0);
